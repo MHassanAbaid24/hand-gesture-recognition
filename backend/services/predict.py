@@ -1,5 +1,5 @@
 # Task 3
-from schemas.predictedResponseSchema import PredictedResponse
+from backend.schemas.predictedResponseSchema import PredictedResponse
 from fastapi import File, UploadFile
 
 
