@@ -1,1 +1,4 @@
 # Dependencies to install
+
+fastapi
+uvicorn
