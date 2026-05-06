@@ -8,19 +8,34 @@ import {
 } from './animationOrchestrator.js';
 import { elements, showToast } from './ui.js';
 import { 
-  initDragAndDrop, 
   validateFile,
   processFile,
   initDropZone,
-  startWebcam, 
-  stopWebcam, 
-  captureWebcamFrame,
   webcam
 } from './upload.js';
+import { 
+  InputSourceManager, 
+  UploadSource, 
+  WebcamSource 
+} from './inputSourceManager.js';
 import { sendPrediction } from './predict.js';
 
 // Create results state machine once during app init
 const resultsDisplay = createResultsOrchestrator();
+
+// Create input source manager once during app init
+const sourceManager = new InputSourceManager(
+  {
+    toggleUpload: '#toggle-upload',
+    toggleWebcam: '#toggle-webcam',
+    uploadPanel: '#upload-panel',
+    webcamPanel: '#webcam-panel'
+  },
+  {
+    upload: new UploadSource(elements.uploadPanel),
+    webcam: new WebcamSource(elements.webcamVideo)
+  }
+);
 
 /**
  * Handle execution of AI model prediction
@@ -47,49 +62,23 @@ async function handlePrediction(file, dataUrl) {
 }
 
 /**
- * Configure input source panels (toggle between manual files and live cameras)
+ * Configure input source manager and listen for changes
  */
-function setupInputSourceToggles() {
-  // Switch to Manual File Uploads
-  elements.toggleUpload.addEventListener('click', () => {
-    if (elements.toggleUpload.classList.contains('active')) return;
-    
-    elements.toggleUpload.classList.add('active');
-    elements.toggleUpload.setAttribute('aria-selected', 'true');
-    
-    elements.toggleWebcam.classList.remove('active');
-    elements.toggleWebcam.setAttribute('aria-selected', 'false');
-    
-    elements.uploadPanel.style.display = 'flex';
-    elements.webcamPanel.style.display = 'none';
-    
-    // Stop webcam streaming tracks (using new API)
-    webcam.stop(elements.webcamVideo);
-  });
+async function setupInputSourceManager() {
+  // Initialize toggle button event listeners
+  await sourceManager.initialize();
 
-  // Switch to Live Webcam Streaming
-  elements.toggleWebcam.addEventListener('click', async () => {
-    if (elements.toggleWebcam.classList.contains('active')) return;
-    
-    elements.toggleWebcam.classList.add('active');
-    elements.toggleWebcam.setAttribute('aria-selected', 'true');
-    
-    elements.toggleUpload.classList.remove('active');
-    elements.toggleUpload.setAttribute('aria-selected', 'false');
-    
-    elements.webcamPanel.style.display = 'flex';
-    elements.uploadPanel.style.display = 'none';
-    
-    // Attempt starting the camera stream (using new API)
-    const active = await webcam.start(elements.webcamVideo);
-    
-    // Fallback if camera stream access is rejected/unsupported
-    if (!active) {
-      showToast('Failed to access camera! Please ensure camera permissions are allowed.', 'error');
-      elements.toggleUpload.click();
-    } else {
+  // Listen for successful source changes
+  sourceManager.onSourceChange((source) => {
+    if (source === 'webcam') {
       showToast('Webcam stream initialized successfully!', 'success');
     }
+  });
+
+  // Listen for source errors (e.g., camera access denied)
+  sourceManager.onSourceError((source, error) => {
+    showToast(`Failed to switch to ${source}: ${error.message}`, 'error');
+    // Manager already reverted to upload automatically
   });
 }
 
@@ -171,17 +160,19 @@ function setupNavbarScrollTrigger() {
 /**
  * Initialize application events and trigger page entrances
  */
-function init() {
+async function init() {
   // 1. Initialize all hero animations as one cohesive unit
   initializeHeroAnimations();
   setupNavbarScrollTrigger();
 
-  // 2. Setup inputs and triggers
-  setupInputSourceToggles();
+  // 2. Setup input source manager
+  await setupInputSourceManager();
+
+  // 3. Setup inputs and triggers
   setupFileInputEvents();
   setupWebcamEvents();
   
-  // 3. Set default state for results panel
+  // 4. Set default state for results panel
   resultsDisplay.showPlaceholder();
 }
 
