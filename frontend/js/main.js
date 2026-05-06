@@ -2,7 +2,13 @@
  * Main Application Orchestrator & Bootstrapper
  */
 
-import { animateHero, initHeroParallax } from './animations.js';
+import { 
+  animateHero, 
+  initHeroParallax, 
+  initCustomCursor, 
+  initTiltCards, 
+  initMagneticButtons 
+} from './animations.js';
 import { elements, setResultsState, showToast, updateResultData } from './ui.js';
 import { 
   initDragAndDrop, 
@@ -131,6 +137,9 @@ function init() {
   // 1. Kickstart premium loading effects and parallax motions
   animateHero();
   initHeroParallax();
+  initCustomCursor();
+  initTiltCards();
+  initMagneticButtons();
 
   // 2. Setup inputs and triggers
   setupInputSourceToggles();

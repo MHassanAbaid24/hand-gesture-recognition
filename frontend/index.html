@@ -21,6 +21,10 @@
 </head>
 <body>
 
+  <!-- Custom Interactive Cursor Follower -->
+  <div id="custom-cursor" class="custom-cursor" aria-hidden="true"></div>
+  <div id="custom-cursor-dot" class="custom-cursor-dot" aria-hidden="true"></div>
+
   <div class="app-container">
     
     <!-- Header -->
@@ -45,14 +49,41 @@
         <div class="hero-bg-shapes">
           <div class="shape shape-1"></div>
           <div class="shape shape-2"></div>
+          <div class="shape shape-3"></div>
         </div>
         <div class="container hero-content">
-          <h1 id="hero-title">Reveal the Power of Hand Gestures</h1>
-          <p id="hero-subtitle" style="font-size: 1.15rem; margin: var(--spacing-md) auto var(--spacing-lg); max-width: 650px;">
+          <h1 id="hero-title" class="hero-title-split">
+            <span class="split-parent"><span class="split-child">Reveal the Power</span></span>
+            <span class="split-parent"><span class="split-child text-gradient">of Hand Gestures</span></span>
+          </h1>
+          <p id="hero-subtitle" style="font-size: 1.2rem; margin: var(--spacing-md) auto var(--spacing-xl); max-width: 650px; opacity: 0;">
             Experience state-of-the-art AI-powered gesture classification. Upload an image or use your webcam to predict hand gestures in real-time.
           </p>
-          <div id="hero-cta-group">
-            <a href="#demo" class="btn btn-primary" id="start-btn">Try Interactive Demo</a>
+          <div id="hero-cta-group" style="opacity: 0; transform: scale(0.9); margin-bottom: var(--spacing-xl);">
+            <a href="#demo" class="btn btn-primary btn-magnetic" id="start-btn">
+              <span>Try Interactive Demo</span>
+              <span class="btn-glow"></span>
+            </a>
+          </div>
+
+          <!-- Floating Interactive Gesture Guide Cards -->
+          <div class="gesture-guide-cards" id="gesture-guide">
+            <div class="gesture-card" data-gesture="Thumbs Up">
+              <span class="gesture-card-emoji">👍</span>
+              <span class="gesture-card-name">Thumbs Up</span>
+            </div>
+            <div class="gesture-card" data-gesture="Peace">
+              <span class="gesture-card-emoji">✌️</span>
+              <span class="gesture-card-name">Peace</span>
+            </div>
+            <div class="gesture-card" data-gesture="Fist">
+              <span class="gesture-card-emoji">✊</span>
+              <span class="gesture-card-name">Fist</span>
+            </div>
+            <div class="gesture-card" data-gesture="Palm">
+              <span class="gesture-card-emoji">🖐️</span>
+              <span class="gesture-card-name">Palm</span>
+            </div>
           </div>
         </div>
       </section>
