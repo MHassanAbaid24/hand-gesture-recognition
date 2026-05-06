@@ -1,24 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Hand Gesture Recognition - AI Real-time Classification</title>
-  
+
   <!-- SEO Meta Tags -->
-  <meta name="description" content="A state-of-the-art AI Hand Gesture Recognition demo. Upload images or capture in real-time from your webcam to identify hand gestures instantly.">
-  <meta name="keywords" content="hand gesture recognition, computer vision, AI, machine learning, webcam, fastapi, real-time prediction">
+  <meta name="description"
+    content="A state-of-the-art AI Hand Gesture Recognition demo. Upload images or capture in real-time from your webcam to identify hand gestures instantly.">
+  <meta name="keywords"
+    content="hand gesture recognition, computer vision, AI, machine learning, webcam, fastapi, real-time prediction">
   <meta name="author" content="Antigravity Team">
-  
+
   <!-- Favicon -->
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🖐️</text></svg>">
-  
+  <link rel="icon" type="image/svg+xml"
+    href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🖐️</text></svg>">
+
   <!-- Stylesheets -->
   <link rel="stylesheet" href="css/variables.css?v=1.1">
   <link rel="stylesheet" href="css/base.css?v=1.1">
   <link rel="stylesheet" href="css/layout.css?v=1.1">
   <link rel="stylesheet" href="css/components.css?v=1.1">
 </head>
+
 <body>
 
   <!-- Custom Interactive Cursor Follower -->
@@ -26,7 +31,7 @@
   <div id="custom-cursor-dot" class="custom-cursor-dot" aria-hidden="true"></div>
 
   <div class="app-container">
-    
+
     <!-- Header -->
     <header class="app-header" role="banner">
       <div class="container">
@@ -43,7 +48,7 @@
 
     <!-- Main Content -->
     <main class="app-main" id="main-content">
-      
+
       <!-- Hero Section -->
       <section class="hero-section" aria-label="Hero and Introduction">
         <div class="hero-bg-shapes">
@@ -56,8 +61,10 @@
             <span class="split-parent"><span class="split-child">Reveal the Power</span></span>
             <span class="split-parent"><span class="split-child text-gradient">of Hand Gestures</span></span>
           </h1>
-          <p id="hero-subtitle" style="font-size: 1.2rem; margin: var(--spacing-md) auto var(--spacing-xl); max-width: 650px; opacity: 0;">
-            Experience state-of-the-art AI-powered gesture classification. Upload an image or use your webcam to predict hand gestures in real-time.
+          <p id="hero-subtitle"
+            style="font-size: 1.2rem; margin: var(--spacing-md) auto var(--spacing-xl); max-width: 650px; opacity: 0;">
+            Experience state-of-the-art AI-powered gesture classification. Upload an image or use your webcam to predict
+            hand gestures in real-time.
           </p>
           <div id="hero-cta-group" style="opacity: 0; transform: scale(0.9); margin-bottom: var(--spacing-xl);">
             <a href="#demo" class="btn btn-capsule btn-magnetic" id="start-btn">
@@ -93,43 +100,49 @@
       <section id="demo" class="section" aria-label="Interactive Hand Gesture Recognition Demo">
         <div class="container">
           <div class="interactive-grid">
-            
+
             <!-- Left Side: Inputs -->
             <article class="card" aria-labelledby="upload-card-title">
               <h2 id="upload-card-title" class="card-title">
                 <span>Input Source</span>
               </h2>
-              
+
               <div class="upload-container">
                 <!-- Source Toggle -->
                 <div class="toggle-inputs" role="tablist" aria-label="Upload source options">
-                  <button id="toggle-upload" class="toggle-btn active" role="tab" aria-selected="true" aria-controls="upload-panel">
+                  <button id="toggle-upload" class="toggle-btn active" role="tab" aria-selected="true"
+                    aria-controls="upload-panel">
                     📂 Upload Image
                   </button>
-                  <button id="toggle-webcam" class="toggle-btn" role="tab" aria-selected="false" aria-controls="webcam-panel">
+                  <button id="toggle-webcam" class="toggle-btn" role="tab" aria-selected="false"
+                    aria-controls="webcam-panel">
                     📷 Live Webcam
                   </button>
                 </div>
 
                 <!-- Main Active Input Panel Wrapper -->
                 <div class="upload-zone-wrapper">
-                  
+
                   <!-- File Drag-and-Drop Zone -->
                   <div id="upload-panel" class="drop-zone" role="tabpanel" aria-labelledby="toggle-upload">
                     <span class="drop-zone-icon" aria-hidden="true">📤</span>
-                    <p style="font-weight: 600; font-size: 1.1rem; margin-bottom: var(--spacing-xs); color: var(--text-main);">
+                    <p
+                      style="font-weight: 600; font-size: 1.1rem; margin-bottom: var(--spacing-xs); color: var(--text-main);">
                       Drag & drop your image here
                     </p>
                     <p style="font-size: 0.9rem; margin-bottom: var(--spacing-md);">
                       Supports JPEG or PNG format
                     </p>
                     <button type="button" class="btn btn-secondary" id="browse-btn">Browse Files</button>
-                    <input type="file" id="file-input" class="sr-only" accept="image/jpeg, image/png" aria-label="Select hand gesture image">
+                    <input type="file" id="file-input" class="sr-only" accept="image/jpeg, image/png"
+                      aria-label="Select hand gesture image">
                   </div>
 
                   <!-- Live Webcam Panel -->
-                  <div id="webcam-panel" class="webcam-panel" role="tabpanel" aria-labelledby="toggle-webcam" style="display: none;">
-                    <video id="webcam-video" class="webcam-stream" autoplay playsinline muted aria-label="Live webcam stream"></video>
+                  <div id="webcam-panel" class="webcam-panel" role="tabpanel" aria-labelledby="toggle-webcam"
+                    style="display: none;">
+                    <video id="webcam-video" class="webcam-stream" autoplay playsinline muted
+                      aria-label="Live webcam stream"></video>
                     <canvas id="webcam-canvas" style="display: none;"></canvas>
                     <div class="webcam-controls">
                       <button id="capture-btn" class="btn btn-accent">📸 Capture Frame</button>
@@ -145,17 +158,19 @@
               <h2 id="results-card-title" class="card-title">
                 <span>Classification Results</span>
               </h2>
-              
+
               <!-- Result State 1: Placeholder (Default) -->
               <div id="result-placeholder" class="result-placeholder">
                 <span class="result-placeholder-icon" aria-hidden="true">💡</span>
                 <p style="font-weight: 600; color: var(--text-main);">No input provided yet</p>
-                <p style="font-size: 0.9rem; max-width: 250px;">Upload an image or trigger webcam capture to perform classification.</p>
+                <p style="font-size: 0.9rem; max-width: 250px;">Upload an image or trigger webcam capture to perform
+                  classification.</p>
               </div>
 
               <!-- Result State 2: Skeleton Loader -->
               <div id="skeleton-loader" class="skeleton-loader" aria-live="polite">
-                <div style="display: flex; flex-direction: column; align-items: center; gap: var(--spacing-sm); margin-bottom: var(--spacing-md);">
+                <div
+                  style="display: flex; flex-direction: column; align-items: center; gap: var(--spacing-sm); margin-bottom: var(--spacing-md);">
                   <div class="skeleton" style="width: 140px; height: 140px; border-radius: var(--radius-md);"></div>
                   <div class="skeleton skeleton-text-lg"></div>
                   <div class="skeleton skeleton-text-sm"></div>
@@ -172,12 +187,14 @@
               <!-- Result State 3: Predicted Output -->
               <div id="result-content" class="result-card" style="display: none;" aria-live="assertive">
                 <!-- Image Preview -->
-                <div style="display: flex; justify-content: center; background: rgba(0,0,0,0.02); padding: var(--spacing-md); border-radius: var(--radius-md); height: 180px;">
+                <div
+                  style="display: flex; justify-content: center; background: rgba(0,0,0,0.02); padding: var(--spacing-md); border-radius: var(--radius-md); height: 180px;">
                   <img id="preview-img" class="preview-image" src="" alt="Hand gesture preview">
                 </div>
-                
+
                 <div style="text-align: center; margin: var(--spacing-sm) 0;">
-                  <p style="font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600;">Gesture Class</p>
+                  <p style="font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600;">
+                    Gesture Class</p>
                   <h3 id="gesture-name" class="gesture-title">Waiting...</h3>
                 </div>
 
@@ -215,8 +232,9 @@
   <!-- CDN Dependencies -->
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-  
+
   <!-- Custom ES6 Javascript Modules -->
   <script type="module" src="js/main.js"></script>
 </body>
+
 </html>
