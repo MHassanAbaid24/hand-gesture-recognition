@@ -9,11 +9,13 @@ import {
 import { elements, showToast } from './ui.js';
 import { 
   initDragAndDrop, 
-  processAndCallbackFile, 
+  validateFile,
+  processFile,
+  initDropZone,
   startWebcam, 
   stopWebcam, 
   captureWebcamFrame,
-  validateFile
+  webcam
 } from './upload.js';
 import { sendPrediction } from './predict.js';
 
@@ -61,8 +63,8 @@ function setupInputSourceToggles() {
     elements.uploadPanel.style.display = 'flex';
     elements.webcamPanel.style.display = 'none';
     
-    // Stop webcam streaming tracks
-    stopWebcam(elements.webcamVideo);
+    // Stop webcam streaming tracks (using new API)
+    webcam.stop(elements.webcamVideo);
   });
 
   // Switch to Live Webcam Streaming
@@ -78,12 +80,15 @@ function setupInputSourceToggles() {
     elements.webcamPanel.style.display = 'flex';
     elements.uploadPanel.style.display = 'none';
     
-    // Attempt starting the camera stream
-    const active = await startWebcam(elements.webcamVideo);
+    // Attempt starting the camera stream (using new API)
+    const active = await webcam.start(elements.webcamVideo);
     
     // Fallback if camera stream access is rejected/unsupported
     if (!active) {
+      showToast('Failed to access camera! Please ensure camera permissions are allowed.', 'error');
       elements.toggleUpload.click();
+    } else {
+      showToast('Webcam stream initialized successfully!', 'success');
     }
   });
 }
@@ -97,25 +102,34 @@ function setupFileInputEvents() {
     elements.fileInput.click();
   });
 
-  // Handle local file system selection
-  elements.fileInput.addEventListener('change', (e) => {
+  // Handle local file system selection (using new API)
+  elements.fileInput.addEventListener('change', async (e) => {
     const files = e.target.files;
     if (files && files.length > 0) {
       const file = files[0];
-      if (validateFile(file)) {
-        processAndCallbackFile(file, (readyFile, dataUrl) => {
-          handlePrediction(readyFile, dataUrl);
-        });
+      const validation = validateFile(file);
+      
+      if (!validation.ok) {
+        showToast(validation.error, 'error');
+      } else {
+        try {
+          const result = await processFile(file);
+          handlePrediction(result.file, result.dataUrl);
+        } catch (error) {
+          showToast(error.message, 'error');
+        }
       }
     }
     // Reset file input value to allow re-uploading same image
     elements.fileInput.value = '';
   });
 
-  // Handle drag and drop files onto the zone
-  initDragAndDrop(elements.uploadPanel, (readyFile, dataUrl) => {
-    handlePrediction(readyFile, dataUrl);
-  });
+  // Handle drag and drop files onto the zone (using new API)
+  initDropZone(
+    elements.uploadPanel,
+    ({ file, dataUrl }) => handlePrediction(file, dataUrl),
+    (error) => showToast(error, 'error')
+  );
 }
 
 /**
@@ -123,9 +137,11 @@ function setupFileInputEvents() {
  */
 function setupWebcamEvents() {
   elements.captureBtn.addEventListener('click', () => {
-    const frameData = captureWebcamFrame(elements.webcamVideo);
+    const frameData = webcam.capture(elements.webcamVideo);
     if (frameData) {
       handlePrediction(frameData.file, frameData.dataUrl);
+    } else {
+      showToast('Webcam stream not ready yet. Please wait...', 'warning');
     }
   });
 }
