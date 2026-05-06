@@ -131,6 +131,28 @@ function setupWebcamEvents() {
 }
 
 /**
+ * Hide navbar initially and reveal it once the user scrolls past 150px
+ */
+function setupNavbarScrollTrigger() {
+  const header = document.querySelector('.app-header');
+  if (!header) return;
+
+  const toggleHeaderVisibility = () => {
+    if (window.scrollY > 150) {
+      header.classList.add('visible');
+    } else {
+      header.classList.remove('visible');
+    }
+  };
+
+  // Run once initially in case page loaded scrolled down
+  toggleHeaderVisibility();
+
+  // Attach high-performance window scroll tracker
+  window.addEventListener('scroll', toggleHeaderVisibility, { passive: true });
+}
+
+/**
  * Initialize application events and trigger page entrances
  */
 function init() {
@@ -140,6 +162,7 @@ function init() {
   initCustomCursor();
   initTiltCards();
   initMagneticButtons();
+  setupNavbarScrollTrigger();
 
   // 2. Setup inputs and triggers
   setupInputSourceToggles();

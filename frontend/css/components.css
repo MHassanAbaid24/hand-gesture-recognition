@@ -405,6 +405,66 @@
   z-index: 2;
 }
 
+/* Futuristic Cyber-Capsule Button */
+.btn-capsule {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.1rem 2.8rem;
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 1.05rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #fff !important;
+  background: rgba(99, 102, 241, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: var(--radius-full);
+  box-shadow: 0 15px 35px rgba(99, 102, 241, 0.2), 
+              inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  overflow: hidden;
+  position: relative;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 300ms ease, 
+              border-color 300ms ease, 
+              box-shadow 300ms ease, 
+              transform 200ms cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.btn-capsule:hover {
+  background: rgba(139, 92, 246, 0.95);
+  border-color: rgba(255, 255, 255, 0.45);
+  box-shadow: 0 20px 45px rgba(139, 92, 246, 0.4), 
+              0 0 30px rgba(139, 92, 246, 0.25),
+              inset 0 1px 0 rgba(255, 255, 255, 0.4);
+  transform: translateY(-4px) scale(1.05);
+}
+
+/* Animated Laser Scan Line */
+.laser-sweep {
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.4) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  transform: skewX(-25deg);
+  pointer-events: none;
+  animation: laser-scan 4s infinite ease-in-out;
+  z-index: 2;
+}
+
+@keyframes laser-scan {
+  0% { left: -100%; }
+  35%, 100% { left: 200%; }
+}
+
 /* Desktop and Tablet Cursor Support */
 @media (max-width: 1024px) {
   .custom-cursor, .custom-cursor-dot {

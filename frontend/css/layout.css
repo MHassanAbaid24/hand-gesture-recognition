@@ -15,7 +15,7 @@
   padding-right: var(--spacing-lg);
 }
 
-/* Header styling with subtle glassmorphic blur */
+/* Header styling with subtle glassmorphic blur (initially hidden, shown on scroll) */
 .app-header {
   position: fixed;
   top: 0;
@@ -27,7 +27,18 @@
   -webkit-backdrop-filter: blur(12px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.2);
   padding: var(--spacing-md) 0;
-  transition: var(--transition-normal);
+  opacity: 0;
+  transform: translateY(-20px);
+  pointer-events: none;
+  transition: opacity 400ms cubic-bezier(0.16, 1, 0.3, 1), 
+              transform 400ms cubic-bezier(0.16, 1, 0.3, 1), 
+              background 400ms ease;
+}
+
+.app-header.visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
 }
 
 .app-header .container {
