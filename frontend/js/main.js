@@ -3,13 +3,10 @@
  */
 
 import { 
-  animateHero, 
-  initHeroParallax, 
-  initCustomCursor, 
-  initTiltCards, 
-  initMagneticButtons 
-} from './animations.js';
-import { elements, setResultsState, showToast, updateResultData } from './ui.js';
+  initializeHeroAnimations,
+  createResultsOrchestrator
+} from './animationOrchestrator.js';
+import { elements, showToast } from './ui.js';
 import { 
   initDragAndDrop, 
   processAndCallbackFile, 
@@ -20,27 +17,30 @@ import {
 } from './upload.js';
 import { sendPrediction } from './predict.js';
 
+// Create results state machine once during app init
+const resultsDisplay = createResultsOrchestrator();
+
 /**
  * Handle execution of AI model prediction
  * @param {File} file - Captured frame or selected file
  * @param {string} dataUrl - Target image visual preview source
  */
 async function handlePrediction(file, dataUrl) {
-  // 1. Transition results panel to a premium loading skeleton state
-  setResultsState('loading');
+  // 1. Transition to loading state
+  resultsDisplay.showLoading();
   showToast('Classifying hand gesture...', 'success');
 
   try {
     // 2. Perform the POST API call
     const result = await sendPrediction(file);
     
-    // 3. Update the results panel with outputs and initiate GSAP fills
-    updateResultData(dataUrl, result.predicted_class, result.confidence);
+    // 3. Display results with animation
+    resultsDisplay.showSuccess(dataUrl, result.predicted_class, result.confidence);
     showToast('Classification complete!', 'success');
   } catch (error) {
     // 4. Handle network or API exceptions gracefully
+    resultsDisplay.showError();
     showToast(error.message, 'error');
-    setResultsState('placeholder');
   }
 }
 
@@ -156,12 +156,8 @@ function setupNavbarScrollTrigger() {
  * Initialize application events and trigger page entrances
  */
 function init() {
-  // 1. Kickstart premium loading effects and parallax motions
-  animateHero();
-  initHeroParallax();
-  initCustomCursor();
-  initTiltCards();
-  initMagneticButtons();
+  // 1. Initialize all hero animations as one cohesive unit
+  initializeHeroAnimations();
   setupNavbarScrollTrigger();
 
   // 2. Setup inputs and triggers
@@ -170,7 +166,7 @@ function init() {
   setupWebcamEvents();
   
   // 3. Set default state for results panel
-  setResultsState('placeholder');
+  resultsDisplay.showPlaceholder();
 }
 
 // Ensure the page DOM content is fully loaded before executing scripts
