@@ -17,8 +17,10 @@
 
 /* Header styling with subtle glassmorphic blur */
 .app-header {
-  position: sticky;
+  position: fixed;
   top: 0;
+  left: 0;
+  right: 0;
   z-index: 100;
   background: rgba(255, 255, 255, 0.7);
   backdrop-filter: blur(12px);
@@ -84,11 +86,13 @@
 /* Base Sections */
 .section {
   padding: var(--spacing-xl) 0;
+  scroll-margin-top: 80px;
 }
 
 .hero-section {
   position: relative;
-  min-height: 70vh;
+  height: 100vh;
+  min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
