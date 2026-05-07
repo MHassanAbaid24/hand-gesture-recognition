@@ -2,3 +2,5 @@ venv
 .github
 *.md
 ralph
+node_modules/
+frontend/node_modules/
