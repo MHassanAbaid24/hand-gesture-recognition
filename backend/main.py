@@ -24,4 +24,4 @@ def health():
 
 @app.post('/predict', response_model=PredictedResponse)
 async def predict(file: UploadFile = File(...)):
-    return run_prediction(file)
+    return await run_prediction(file)
