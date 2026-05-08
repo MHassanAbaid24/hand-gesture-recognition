@@ -4,3 +4,5 @@ venv
 ralph
 node_modules/
 frontend/node_modules/
+.env
+.sixth/
