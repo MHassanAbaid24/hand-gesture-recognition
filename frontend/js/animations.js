@@ -17,11 +17,12 @@ export function animateHero() {
   gsap.set('#hero-subtitle', { opacity: 0 });
   gsap.set('#hero-cta-group', { opacity: 0, scale: 0.95 });
   gsap.set('.gesture-guide-cards', { opacity: 0, y: 40 });
+  gsap.set(['.hologram-hand', '.hologram-human'], { opacity: 0, scale: 0.8 });
 
   // 1. Split Text Slide Up
   tl.fromTo('.split-child', 
     { translateY: '110%' }, 
-    { translateY: '0%', duration: 1.2, stagger: 0.15, ease: 'power4.out' }
+    { translateY: '0%', duration: 1.2, stagger: 0.1, ease: 'expo.out' }
   )
   // 2. Subtitle Fade In
   .fromTo('#hero-subtitle', 
@@ -32,7 +33,7 @@ export function animateHero() {
   // 3. CTA Magnetic Button pop
   .fromTo('#hero-cta-group', 
     { opacity: 0, scale: 0.9 }, 
-    { opacity: 1, scale: 1, duration: 0.6, ease: 'back.out(1.5)' },
+    { opacity: 1, scale: 1, duration: 0.6, ease: 'power4.out' },
     '-=0.4'
   )
   // 4. Staggered card guide reveals with float waves
@@ -51,7 +52,11 @@ export function animateHero() {
       }
     },
     '-=0.3'
-  );
+  )
+  // 5. Hologram Entrance
+  .to(['.hologram-hand', '.hologram-human'], {
+    opacity: 1, scale: 1, duration: 2, ease: 'power3.out', stagger: 0.2
+  });
 }
 
 /**
@@ -126,8 +131,8 @@ export function initCustomCursor() {
     gsap.to(dot, {
       x: mouse.x,
       y: mouse.y,
-      duration: 0.1,
-      ease: 'power1.out'
+      duration: 0.05,
+      ease: 'none'
     });
   });
 
@@ -273,6 +278,17 @@ export function revealResults(element) {
   if (!gsap) {
     element.style.display = 'flex';
     return;
+  }
+  
+  // Trigger Glitch on the gesture name
+  const nameEl = element.querySelector('#gesture-name');
+  if (nameEl) {
+    nameEl.setAttribute('data-text', nameEl.innerText);
+    nameEl.classList.add('glitch-active');
+    
+    setTimeout(() => {
+      nameEl.classList.remove('glitch-active');
+    }, 600);
   }
 
   gsap.fromTo(element, 
