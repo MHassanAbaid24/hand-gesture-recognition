@@ -6,3 +6,6 @@ node_modules/
 frontend/node_modules/
 .env
 .sixth/
+
+__pycache__/
+copy_of_ai.py
