@@ -2,20 +2,14 @@ import json
 import os
 import tensorflow as tf
 
-def load_gesture_model(config_path="backend/model/config/config.json", weights_path="backend/model/config/model.weights.h5"):
+def load_gesture_model(model_path="backend/model/config/model_final.keras"):
     """
-    Loads the Keras model architecture from config.json and weights from model.weights.h5.
+    Loads the Keras model directly from the self-contained .keras file.
     """
-    if not os.path.exists(config_path) or not os.path.exists(weights_path):
-        raise FileNotFoundError(f"Model config or weights not found at {config_path} / {weights_path}")
-
-    with open(config_path, "r") as f:
-        model_config = f.read()
+    if not os.path.exists(model_path):
+        raise FileNotFoundError(f"Model file not found at {model_path}")
     
-    # Keras 3 model_from_json handles the serialized JSON string
-    model = tf.keras.models.model_from_json(model_config)
-    model.load_weights(weights_path)
-    return model
+    return tf.keras.models.load_model(model_path)
 
 class GestureModel:
     """

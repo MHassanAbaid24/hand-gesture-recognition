@@ -13,24 +13,23 @@ GESTURE_CLASSES = [
     "A","B","C","D","E","F","G","H","I","J",
     "K","L","M","N","O","P","Q","R","S","T",
     "U","V","W","X","Y","Z",
-    "space", "delete", "nothing"
+    "del", "nothing", "space"
 ]   
 
-MODEL_CONFIG_PATH  = os.getenv("MODEL_CONFIG_PATH",  "backend/model/config/config.json")
-MODEL_WEIGHTS_PATH = os.getenv("MODEL_WEIGHTS_PATH", "backend/model/config/model.weights.h5")
+MODEL_PATH = os.getenv("MODEL_PATH", "backend/model/config/model_final.keras")
 
 model    = None 
 is_mock  = False   
 
 def _load_model():
     """
-    Try to load the Keras model weights.
+    Try to load the Keras model.
     If it fails, switch to mock mode silently.
     """
     global model, is_mock
 
     try:
-        model = load_gesture_model(MODEL_CONFIG_PATH, MODEL_WEIGHTS_PATH)
+        model = load_gesture_model(MODEL_PATH)
         is_mock = False
         print("✅ Keras model loaded successfully.")
 
@@ -63,19 +62,20 @@ async def run_prediction(file: UploadFile) -> PredictedResponse:
     if is_mock:
         return _mock_prediction(image_bytes)
 
-    # Preprocessing
+    # Preprocessing with Bilinear Resizing to preserve finger-gap features (NO redundant / 255.0 division)
     image = Image.open(io.BytesIO(image_bytes)).convert("RGB")
-    image = image.resize((200, 200))
-    img_array = np.array(image).astype(np.float32) / 255.0
+    image_resized = image.resize((200, 200), Image.Resampling.BILINEAR)
+    img_array = np.array(image_resized).astype(np.float32)
     img_array = np.expand_dims(img_array, axis=0)  # Shape: (1, 200, 200, 3)
 
-    # Inference
-    predictions = model.predict(img_array, verbose=0)
-    predicted_idx = np.argmax(predictions[0])
-    confidence = np.max(predictions[0])
+    # Single-image inference for maximum stability and correctness
+    predictions = model.predict(img_array, verbose=0)[0]
+
+    predicted_idx = np.argmax(predictions)
+    confidence = float(predictions[predicted_idx])
 
     gesture    = GESTURE_CLASSES[predicted_idx]
-    confidence = round(float(confidence), 4)
+    confidence = round(confidence, 4)
 
     return PredictedResponse(
         predicted_class=gesture,
