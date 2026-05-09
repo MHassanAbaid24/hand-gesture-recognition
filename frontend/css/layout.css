@@ -22,10 +22,10 @@
   left: 0;
   right: 0;
   z-index: 100;
-  background: rgba(255, 255, 255, 0.7);
+  background: rgba(5, 5, 5, 0.8);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  border-bottom: 1px solid rgba(0, 212, 255, 0.1);
   padding: var(--spacing-md) 0;
   opacity: 0;
   transform: translateY(-20px);
@@ -108,7 +108,8 @@
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  background: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 1) 0%, rgba(248, 249, 250, 1) 100%);
+  background: radial-gradient(circle at 50% 50%, #0a0a0f 0%, #050505 100%);
+  border-bottom: 1px solid rgba(0, 212, 255, 0.05);
 }
 
 .hero-bg-shapes {
@@ -132,7 +133,7 @@
 .shape-1 {
   width: 450px;
   height: 450px;
-  background: #6366f1;
+  background: #00d4ff;
   top: -10%;
   left: -5%;
   animation: morph-blob-1 18s infinite alternate ease-in-out;
@@ -141,7 +142,7 @@
 .shape-2 {
   width: 500px;
   height: 500px;
-  background: #8b5cf6;
+  background: #7000ff;
   bottom: -15%;
   right: -10%;
   animation: morph-blob-2 22s infinite alternate ease-in-out;
