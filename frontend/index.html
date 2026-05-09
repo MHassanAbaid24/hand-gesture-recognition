@@ -1,240 +1,90 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Hand Gesture Recognition - AI Real-time Classification</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NeuroSign | ASL Recognition AI</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet">
 
-  <!-- SEO Meta Tags -->
-  <meta name="description"
-    content="A state-of-the-art AI Hand Gesture Recognition demo. Upload images or capture in real-time from your webcam to identify hand gestures instantly.">
-  <meta name="keywords"
-    content="hand gesture recognition, computer vision, AI, machine learning, webcam, fastapi, real-time prediction">
-  <meta name="author" content="Antigravity Team">
+    <!-- External libs -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
 
-  <!-- Favicon -->
-  <link rel="icon" type="image/svg+xml"
-    href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🖐️</text></svg>">
-
-  <!-- Stylesheets -->
-  <link rel="stylesheet" href="css/variables.css?v=1.1">
-  <link rel="stylesheet" href="css/base.css?v=1.1">
-  <link rel="stylesheet" href="css/layout.css?v=1.1">
-  <link rel="stylesheet" href="css/components.css?v=1.1">
+    <!-- Page styles + logic -->
+    <link rel="stylesheet" href="css/neurosign.css">
+    <script defer src="js/neurosign.js"></script>
 </head>
-
 <body>
 
-  <!-- Custom Interactive Cursor Follower -->
-  <div id="custom-cursor" class="custom-cursor" aria-hidden="true"></div>
-  <div id="custom-cursor-dot" class="custom-cursor-dot" aria-hidden="true"></div>
+    <div id="cursor-dot"></div>
+    <div id="cursor-ring"></div>
 
-  <div class="app-container">
-
-    <!-- Header -->
-    <header class="app-header" role="banner">
-      <div class="container">
-        <a href="#" class="logo" aria-label="Hand Gesture Recognition home">
-          <div class="logo-icon" aria-hidden="true">🖐️</div>
-          <span>GestureAI</span>
-        </a>
-        <nav class="nav-links" aria-label="Primary navigation">
-          <a href="#demo" class="nav-link">Interactive Demo</a>
-          <a href="https://github.com" target="_blank" class="nav-link" rel="noopener noreferrer">Source Code</a>
-        </nav>
-      </div>
+    <header>
+        <div class="logo"><i data-lucide="hand"></i> NEUROSIGN AI</div>
+        <div style="font-size: 0.7rem; letter-spacing: 2px; color: var(--hologram-cyan); font-weight: 700;">
+            <span id="system-status">READY_FOR_INPUT</span>
+        </div>
     </header>
 
-    <!-- Main Content -->
-    <main class="app-main" id="main-content">
-
-      <!-- Hero Section -->
-      <section class="hero-section" aria-label="Hero and Introduction">
-        <div class="hero-bg-shapes">
-          <div class="shape shape-1"></div>
-          <div class="shape shape-2"></div>
-          <div class="shape shape-3"></div>
+    <section class="hero" id="hero">
+        <div class="hero-info">
+            <span style="color: var(--hologram-cyan); font-weight: 700; font-size: 0.75rem; letter-spacing: 4px;">AI-POWERED INTERPRETER</span>
+            <h1>ASL GESTURE<br><span class="cyan-text">RECOGNITION</span></h1>
+            <p style="color: #94a3b8; margin: 1.5rem 0 2.5rem; max-width: 480px; line-height: 1.6;">
+                Bridging the communication gap through real-time computer vision. Upload a clear image of an ASL alphabet sign to translate it instantly.
+            </p>
+            <button class="btn btn-active" onclick="document.getElementById('app').scrollIntoView({behavior:'smooth'})">
+                Launch Interpreter <i data-lucide="arrow-right"></i>
+            </button>
         </div>
-        <div class="container hero-content">
-          <h1 id="hero-title" class="hero-title-split">
-            <span class="split-parent"><span class="split-child">Reveal the Power</span></span>
-            <span class="split-parent"><span class="split-child text-gradient">of Hand Gestures</span></span>
-          </h1>
-          <p id="hero-subtitle"
-            style="font-size: 1.2rem; margin: var(--spacing-md) auto var(--spacing-xl); max-width: 650px; opacity: 0;">
-            Experience state-of-the-art AI-powered gesture classification. Upload an image or use your webcam to predict
-            hand gestures in real-time.
-          </p>
-          <div id="hero-cta-group" style="opacity: 0; transform: scale(0.9); margin-bottom: var(--spacing-xl);">
-            <a href="#demo" class="btn btn-capsule btn-magnetic" id="start-btn">
-              <span class="btn-text">Try Interactive Demo</span>
-              <span class="laser-sweep"></span>
-              <span class="btn-glow"></span>
-            </a>
-          </div>
 
-          <!-- Floating Interactive Gesture Guide Cards -->
-          <div class="gesture-guide-cards" id="gesture-guide">
-            <div class="gesture-card" data-gesture="Thumbs Up">
-              <span class="gesture-card-emoji">👍</span>
-              <span class="gesture-card-name">Thumbs Up</span>
-            </div>
-            <div class="gesture-card" data-gesture="Peace">
-              <span class="gesture-card-emoji">✌️</span>
-              <span class="gesture-card-name">Peace</span>
-            </div>
-            <div class="gesture-card" data-gesture="Fist">
-              <span class="gesture-card-emoji">✊</span>
-              <span class="gesture-card-name">Fist</span>
-            </div>
-            <div class="gesture-card" data-gesture="Palm">
-              <span class="gesture-card-emoji">🖐️</span>
-              <span class="gesture-card-name">Palm</span>
-            </div>
-          </div>
+        <div id="hologram-canvas-container">
+            <div class="emitter-base"></div>
         </div>
-      </section>
+    </section>
 
-      <!-- Interactive App Section -->
-      <section id="demo" class="section" aria-label="Interactive Hand Gesture Recognition Demo">
-        <div class="container">
-          <div class="interactive-grid">
-
-            <!-- Left Side: Inputs -->
-            <article class="card" aria-labelledby="upload-card-title">
-              <h2 id="upload-card-title" class="card-title">
-                <span>Input Source</span>
-              </h2>
-
-              <div class="upload-container">
-                <!-- Source Toggle -->
-                <div class="toggle-inputs" role="tablist" aria-label="Upload source options">
-                  <button id="toggle-upload" class="toggle-btn active" role="tab" aria-selected="true"
-                    aria-controls="upload-panel">
-                    📂 Upload Image
-                  </button>
-                  <button id="toggle-webcam" class="toggle-btn" role="tab" aria-selected="false"
-                    aria-controls="webcam-panel">
-                    📷 Live Webcam
-                  </button>
+    <main class="app-container" id="app">
+        <div class="glass-panel">
+            <div class="feed-window" id="display-container">
+                <div class="scanline"></div>
+                <video id="webcam" autoplay playsinline style="display: none;"></video>
+                <img id="preview-img" style="display: none;" alt="Upload Preview">
+                <div id="cam-overlay" style="position:absolute; inset:0; background: rgba(0,0,0,0.7); display:flex; align-items:center; justify-content:center; flex-direction:column; gap:15px; backdrop-filter: blur(4px);">
+                    <i data-lucide="upload-cloud" style="width:48px; height:48px; color: var(--hologram-cyan); opacity: 0.5;"></i>
+                    <p style="color: #94a3b8; font-size: 0.9rem; font-weight: 500;">AWAITING IMAGE UPLOAD</p>
                 </div>
-
-                <!-- Main Active Input Panel Wrapper -->
-                <div class="upload-zone-wrapper">
-
-                  <!-- File Drag-and-Drop Zone -->
-                  <div id="upload-panel" class="drop-zone" role="tabpanel" aria-labelledby="toggle-upload">
-                    <span class="drop-zone-icon" aria-hidden="true">📤</span>
-                    <p
-                      style="font-weight: 600; font-size: 1.1rem; margin-bottom: var(--spacing-xs); color: var(--text-main);">
-                      Drag & drop your image here
-                    </p>
-                    <p style="font-size: 0.9rem; margin-bottom: var(--spacing-md);">
-                      Supports JPEG or PNG format
-                    </p>
-                    <button type="button" class="btn btn-secondary" id="browse-btn">Browse Files</button>
-                    <input type="file" id="file-input" class="sr-only" accept="image/jpeg, image/png"
-                      aria-label="Select hand gesture image">
-                  </div>
-
-                  <!-- Live Webcam Panel -->
-                  <div id="webcam-panel" class="webcam-panel" role="tabpanel" aria-labelledby="toggle-webcam"
-                    style="display: none;">
-                    <video id="webcam-video" class="webcam-stream" autoplay playsinline muted
-                      aria-label="Live webcam stream"></video>
-                    <canvas id="webcam-canvas" style="display: none;"></canvas>
-                    <div class="webcam-controls">
-                      <button id="capture-btn" class="btn btn-accent">📸 Capture Frame</button>
-                    </div>
-                  </div>
-
-                </div>
-              </div>
-            </article>
-
-            <!-- Right Side: Results -->
-            <article class="card" aria-labelledby="results-card-title">
-              <h2 id="results-card-title" class="card-title">
-                <span>Classification Results</span>
-              </h2>
-
-              <!-- Result State 1: Placeholder (Default) -->
-              <div id="result-placeholder" class="result-placeholder">
-                <span class="result-placeholder-icon" aria-hidden="true">💡</span>
-                <p style="font-weight: 600; color: var(--text-main);">No input provided yet</p>
-                <p style="font-size: 0.9rem; max-width: 250px;">Upload an image or trigger webcam capture to perform
-                  classification.</p>
-              </div>
-
-              <!-- Result State 2: Skeleton Loader -->
-              <div id="skeleton-loader" class="skeleton-loader" aria-live="polite">
-                <div
-                  style="display: flex; flex-direction: column; align-items: center; gap: var(--spacing-sm); margin-bottom: var(--spacing-md);">
-                  <div class="skeleton" style="width: 140px; height: 140px; border-radius: var(--radius-md);"></div>
-                  <div class="skeleton skeleton-text-lg"></div>
-                  <div class="skeleton skeleton-text-sm"></div>
-                </div>
-                <div class="confidence-container">
-                  <div style="display: flex; justify-content: space-between; margin-bottom: var(--spacing-xs);">
-                    <div class="skeleton skeleton-text-sm" style="width: 80px;"></div>
-                    <div class="skeleton skeleton-text-sm" style="width: 40px;"></div>
-                  </div>
-                  <div class="skeleton skeleton-bar"></div>
-                </div>
-              </div>
-
-              <!-- Result State 3: Predicted Output -->
-              <div id="result-content" class="result-card" style="display: none;" aria-live="assertive">
-                <!-- Image Preview -->
-                <div
-                  style="display: flex; justify-content: center; background: rgba(0,0,0,0.02); padding: var(--spacing-md); border-radius: var(--radius-md); height: 180px;">
-                  <img id="preview-img" class="preview-image" src="" alt="Hand gesture preview">
-                </div>
-
-                <div style="text-align: center; margin: var(--spacing-sm) 0;">
-                  <p style="font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600;">
-                    Gesture Class</p>
-                  <h3 id="gesture-name" class="gesture-title">Waiting...</h3>
-                </div>
-
-                <div class="confidence-container">
-                  <div class="confidence-label">
-                    <span>Model Confidence</span>
-                    <span id="confidence-percentage">0%</span>
-                  </div>
-                  <div class="confidence-bg" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
-                    <div id="confidence-fill" class="confidence-fill"></div>
-                  </div>
-                </div>
-              </div>
-
-            </article>
-
-          </div>
+            </div>
+            
+            <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                <input type="file" id="file-input" accept="image/jpeg,image/png">
+                <button class="btn" id="upload-btn"><i data-lucide="upload"></i> Upload Image</button>
+                <button class="btn" id="camera-btn"><i data-lucide="video"></i> Use Camera</button>
+            </div>
         </div>
-      </section>
 
+        <aside class="glass-panel" style="display: flex; flex-direction: column; justify-content: center;">
+            <div class="status-box">
+                <p class="output-label">RECOGNIZED LETTER</p>
+                <div class="sign-display" id="sign-val">_</div>
+                
+                <p class="output-label" style="margin-top: 1.5rem;">ANALYSIS STATUS</p>
+                <div class="confidence-indicator" id="conf-container" style="visibility: hidden;">
+                    <div id="status-dot" style="width: 8px; height: 8px; border-radius: 50%; background: var(--hologram-cyan); animation: pulse 2s infinite;"></div>
+                    <span id="conf-val">0% Accuracy</span>
+                </div>
+            </div>
+            
+            <div style="margin-top: 3rem; padding: 1.5rem; border: 1px solid rgba(255,255,255,0.05); background: rgba(0,0,0,0.1); border-radius: 12px;">
+                <p style="font-size: 0.7rem; color: #64748b; line-height: 1.5;">
+                    <i data-lucide="info" style="width: 12px; height: 12px; vertical-align: middle;"></i> Position your hand clearly with good lighting for clinical-grade precision.
+                </p>
+            </div>
+        </aside>
     </main>
 
-    <!-- Footer -->
-    <footer class="app-footer" role="contentinfo">
-      <div class="container">
-        <p>&copy; 2026 GestureAI. Crafted with rich animations & premium styling.</p>
-      </div>
-    </footer>
-
-    <!-- Toast Notification Container -->
-    <div id="toast-container" class="toast-container" aria-live="polite"></div>
-
-  </div>
-
-  <!-- CDN Dependencies -->
-  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-
-  <!-- Custom ES6 Javascript Modules -->
-  <script type="module" src="js/main.js"></script>
 </body>
-
 </html>
