@@ -112,8 +112,10 @@ export function initTiltCards() {
  * Inertia-lerping custom mouse cursor follower
  */
 export function initCustomCursor() {
-  const cursor = document.getElementById('custom-cursor');
-  const dot = document.getElementById('custom-cursor-dot');
+  // This project’s NeuroSign page uses #cursor-dot and #cursor-ring (not #custom-cursor*).
+  const cursor = document.getElementById('custom-cursor') || document.getElementById('cursor-ring');
+  const dot = document.getElementById('custom-cursor-dot') || document.getElementById('cursor-dot');
+
   if (!cursor || !dot || !gsap) return;
 
   // Reveal cursors once active

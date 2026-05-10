@@ -21,6 +21,23 @@ body {
 #cursor-dot { width: 6px; height: 6px; background: var(--hologram-cyan); position: fixed; border-radius: 50%; z-index: 10000; pointer-events: none; }
 #cursor-ring { width: 34px; height: 34px; border: 1px solid var(--hologram-cyan); position: fixed; border-radius: 50%; z-index: 9999; pointer-events: none; transition: transform 0.1s ease-out; }
 
+/* Cursor fill on hover (NeuroSign page cursor is #cursor-ring / #cursor-dot) */
+#cursor-ring.hovering {
+    /* filled ring */
+    background-color: rgba(0, 242, 255, 0.95) !important;
+    border-color: rgba(0, 242, 255, 0.95) !important;
+    box-shadow: 0 0 28px rgba(0, 242, 255, 0.45) !important;
+
+    /* mix-blend-mode:difference can make the fill hard to see; disable it on hover */
+    mix-blend-mode: normal !important;
+}
+
+/* Also slightly emphasize the inner dot on hover */
+#cursor-dot.hovering {
+    background: rgba(0, 242, 255, 0.95);
+    box-shadow: 0 0 18px rgba(0, 242, 255, 0.35);
+}
+
 header {
     padding: 1.5rem 5%;
     display: flex; justify-content: space-between; align-items: center;
@@ -83,9 +100,12 @@ header {
 
 .scanline {
     position: absolute; top: 0; left: 0; width: 100%; height: 2px;
-    background: rgba(0, 242, 255, 0.3); box-shadow: 0 0 10px var(--hologram-cyan);
+    background: rgba(0, 242, 255, 0.35); box-shadow: 0 0 10px var(--hologram-cyan);
     animation: scan 3s linear infinite; pointer-events: none; z-index: 5;
 }
+
+/* Hide the scanning line once a classification decision is made */
+.scanline.is-hidden { display: none; }
 
 @keyframes scan { from { top: 0%; } to { top: 100%; } }
 
@@ -108,8 +128,26 @@ header {
 }
 
 .sign-display {
-    font-family: 'Space Grotesk', sans-serif; font-size: 9rem; font-weight: 800;
-    color: var(--hologram-cyan); line-height: 1; margin: 0.5rem 0;
+    font-family: 'Space Grotesk', sans-serif;
+    /* Keep “space”/“nothing” fully inside the sidebar box */
+    font-size: clamp(1.8rem, 4.2vw, 3.6rem);
+    font-weight: 800;
+    color: var(--hologram-cyan);
+    line-height: 1.02;
+    margin: 0.5rem 0;
+
+    /* Ensure it can't spill outside its container */
+    width: 100%;
+    max-width: 100%;
+    padding: 0 0.25rem;
+    text-align: center;
+    overflow: hidden;
+
+    /* Allow break/fit for long labels */
+    white-space: normal;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+
     text-shadow: 0 0 50px rgba(0, 242, 255, 0.5);
 }
 

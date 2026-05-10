@@ -136,8 +136,13 @@ const signVal = document.getElementById('sign-val');
 const confVal = document.getElementById('conf-val');
 const confContainer = document.getElementById('conf-container');
 const sysStatus = document.getElementById('system-status');
+const scanline = document.querySelector('.scanline');
 
 let cameraActive = false;
+
+function hideScanline() {
+  if (scanline) scanline.classList.add('is-hidden');
+}
 
 function validateFile(file) {
   const allowedTypes = ['image/jpeg', 'image/png'];
@@ -228,6 +233,9 @@ async function performPrediction(base64Image) {
   if (confVal) confVal.innerText = "CLASSIFYING...";
   if (sysStatus) sysStatus.innerText = "NEURAL_PROCESSING";
 
+  // Ensure scanline is visible at the start of a new prediction
+  if (scanline) scanline.classList.remove('is-hidden');
+
   gsap.to(glyphGroup.scale, {
     x: 1.15,
     y: 1.15,
@@ -281,6 +289,9 @@ async function performPrediction(base64Image) {
       if (signVal) signVal.innerText = result.predicted_class;
       if (confVal) confVal.innerText = `${Math.round(result.confidence * 100)}% Accuracy`;
       if (sysStatus) sysStatus.innerText = "ANALYSIS_COMPLETE";
+
+      // Hide scanline once a decision is made
+      hideScanline();
       return;
     } catch (error) {
       retries++;
@@ -292,6 +303,9 @@ async function performPrediction(base64Image) {
   if (signVal) signVal.innerText = "!";
   if (confVal) confVal.innerText = "SIGNAL_LOST";
   if (sysStatus) sysStatus.innerText = "SERVICE_UNAVAILABLE";
+
+  // Also hide scanline when we give up / fail
+  hideScanline();
 }
 
 // Boot hologram once DOM is loaded
