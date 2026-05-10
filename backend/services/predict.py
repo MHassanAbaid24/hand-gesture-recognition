@@ -99,9 +99,10 @@ async def run_prediction(file: UploadFile) -> PredictedResponse:
     results = _DETECTOR.detect(mp_img)
     
     if not results.hand_landmarks:
-        raise HTTPException(
-            status_code=400, 
-            detail="HAND_NOT_VISIBLE: Please hold your hand clearly in frame."
+        # Semantic Definition: Absence of recognizable hand structures is defined as 'nothing'
+        return PredictedResponse(
+            predicted_class="nothing",
+            confidence=1.0
         )
         
     lms = results.hand_landmarks[0]
