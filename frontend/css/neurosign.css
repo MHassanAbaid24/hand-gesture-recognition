@@ -115,7 +115,16 @@ header {
     cursor: pointer; transition: 0.3s; display: inline-flex; align-items: center; gap: 10px;
     text-transform: uppercase; font-size: 0.8rem; letter-spacing: 1.5px;
 }
-.btn:hover { background: rgba(0, 242, 255, 0.1); transform: translateY(-2px); }
+/* Hover: improve readability */
+.btn:hover {
+    background: rgba(0, 242, 255, 0.22);
+
+    /* turn button text blue-ish on hover (while cursor is over it) */
+    color: var(--hologram-cyan) !important;
+
+    border-color: rgba(0, 242, 255, 0.95);
+    transform: translateY(-2px);
+}
 .btn-active { background: var(--hologram-cyan); color: var(--bg-dark); }
 .btn:disabled { opacity: 0.5; cursor: not-allowed !important; }
 
