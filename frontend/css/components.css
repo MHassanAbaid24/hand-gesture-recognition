@@ -24,6 +24,10 @@
 
 .btn:hover {
   transform: translateY(-2px) scale(1.03);
+  /* ensure high contrast on dark background */
+  background-color: rgba(0, 242, 255, 0.18);
+  border-color: rgba(0, 242, 255, 0.95);
+  color: #e6fbff;
 }
 
 .btn:active {
@@ -480,8 +484,13 @@
 .custom-cursor.hovering {
   width: 52px;
   height: 52px;
-  background-color: rgba(255, 255, 255, 0.95);
-  border-color: rgba(255, 255, 255, 0.95);
+
+  /* fill the cursor on hover */
+  background-color: rgba(0, 242, 255, 0.95);
+  border-color: rgba(0, 242, 255, 0.95);
+
+  /* make the fill feel solid */
+  box-shadow: 0 0 28px rgba(0, 242, 255, 0.35);
 }
 
 /* Magnetic CTA Effects */
