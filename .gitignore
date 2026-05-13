@@ -9,3 +9,5 @@ frontend/node_modules/
 
 __pycache__/
 copy_of_ai.py
+prompt_to_AI.txt
+comparison
