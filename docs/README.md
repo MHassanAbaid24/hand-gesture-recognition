@@ -6,20 +6,30 @@ Machine learning API that predicts hand gestures from image uploads.
 
 ```
 hand-gesture-recognition/
-├── backend/                    # FastAPI backend application
-│   ├── main.py                # FastAPI app with /health and /predict routes
-│   ├── requirements.txt        # Python dependencies (FastAPI, Uvicorn)
-│   ├── model/                 # PyTorch model code and weights
-│   │   ├── model.py           # Model architecture definition
-│   │   └── gesture_model.pt   # Pre-trained model weights
-│   ├── services/              # Business logic
-│   │   └── predict.py         # Prediction service implementation
-│   └── schemas/               # Pydantic request/response models
-│       └── predictedResponseSchema.py  # API response format
-├── frontend/                  # Frontend application (placeholder)
-├── docs/                      # Documentation and research materials
-├── .env.example               # Environment variables template
-└── venv/                      # Python virtual environment (git-ignored)
+├── backend/                        # FastAPI backend application
+│   ├── main.py                    # FastAPI app with /health and /predict routes
+│   ├── requirements.txt            # Python dependencies (FastAPI, PyTorch, MediaPipe, etc.)
+│   ├── model/                     # PyTorch model code and configuration
+│   │   ├── config/                # Model weights, configurations, and training reference
+│   │   │   ├── asl_cnn_skeleton_ultimate.pth  # Pre-trained skeletal CNN weights
+│   │   │   ├── config.json        # Model setup configuration
+│   │   │   ├── hand_landmarker.task  # MediaPipe landmarker task for skeletal extraction
+│   │   │   ├── metadata.json      # Class labels and model metadata
+│   │   │   └── model_training_code_reference.ipynb # Reference training notebook
+│   │   └── model.py               # PyTorch CNN model architecture definition
+│   ├── services/                  # Business logic
+│   │   └── predict.py             # Prediction service using MediaPipe & PyTorch
+│   ├── schemas/                   # Pydantic request/response schemas
+│   │   └── predictedResponseSchema.py  # API response schema
+│   └── test-images/               # Sample images for local inference testing
+├── frontend/                      # Full Single-Page Application (SPA)
+│   ├── index.html                 # Entry point of the UI
+│   ├── package.json               # Frontend dependencies & test scripts (Jest, etc.)
+│   ├── css/                       # Modular stylesheets (layout, neurosign components, etc.)
+│   ├── js/                        # ES6 modules for app logic (visualizers, orchestrator, upload)
+│   └── tests/                     # Jest unit tests for frontend ES modules
+├── docs/                          # Documentation, research papers, and guides
+└── .env.example                   # Environment variables template
 ```
 
 ## Quick Start
@@ -49,7 +59,7 @@ hand-gesture-recognition/
 - **main.py** - Entry point for the FastAPI server
 - **.env.example** - Template for configuration (MODEL_PATH, MODEL_DEVICE, CORS settings, file upload limits)
 - **requirements.txt** - FastAPI and Uvicorn dependencies
-- **gesture_model.pt** - Pre-trained PyTorch model for inference
+- **asl_cnn_skeleton_ultimate.pth** - Pre-trained PyTorch skeletal CNN model weights for inference
 
 ## Architecture
 
